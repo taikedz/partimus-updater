@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -euo pipefail
+
+#%include bashout
+
+if [[ "$UID" -gt 0 ]]; then faile You must be root to run this utility
+fi
+
+function readconf {
+	label=$1; shift
+	if [[ ! -f /etc/partimus.conf ]]; then
+		mailx -s "No configuration file on $machinename !" $alertemail
+	fi
+	echo $(grep -v -e '^#' /etc/partimus.conf |grep -e "^$label=" | sed "s/$label=//" )
+}
+
+thedate=$(date "+%F%T"|sed -r 's/[^0-9]+//g')
+alertemail=$(readconf EMAIL)
+machinename=$(readconf MACHINE)
+updatemode=$(readconf UMODE)
+logfile=$HOME/updater-$thdedate.log
+
+cd ~/partimus-updater
+
+git pull origin master || {
+	mailx -s "Failed to pull update automation on $machinename" $alertemail
+	exit 127
+}
+
+for runscript in $(find scripts/ -executable|tail -n +2 | sort ); do
+	"$runscript" >> "$logfile" || {
+		cat "$logfile"| mailx -s "[$runscript] on $machinename FAILED" $alertemail
+		if [[ "$updatemode" = "blocking" ]]; then
+			exit 2
+		fi
+	}
+done
