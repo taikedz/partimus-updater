@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Some examples. Only uncomment one of the lines
+
+# Example - set execution mode to be blocking
+#sed -r 's/^UMODE=.+/UMODE=blocking/'
+
+# Example - set UMODE to be non-blocking
+#sed -r 's/^UMODE=.+/UMODE=/'
