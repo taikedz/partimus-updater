@@ -28,9 +28,8 @@ Licensed under LGPLv3
 		* make your changes (see scripts section)
 		* make a pull request to the development branch
 	* If you want to specify a different repository
-		* support will be added for that
-		* for now, you will need to edit any occurrences of the github URL and the directory name
-		* this will be made configurable eventually
+		* before running the install script, edit the `giturl` variable
+		* simply pull from a different repository
 
 ## Scripts
 
