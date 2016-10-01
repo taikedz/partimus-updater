@@ -81,7 +81,7 @@ fi
 function readconf {
 	label=$1; shift
 	if [[ ! -f /etc/partimus.conf ]]; then
-		mailx -s "No configuration file on $machinename !" $alertemail
+		echo ""|mailx -s "No configuration file on $machinename !" $alertemail
 	fi
 	echo $(grep -v -e '^#' /etc/partimus.conf |grep -e "^$label=" | sed "s/$label=//" )
 }
@@ -92,10 +92,10 @@ machinename=$(readconf MACHINE)
 updatemode=$(readconf UMODE)
 logfile=/root/updater-$thedate.log
 
-cd ~/partimus-updater
+cd /root/partimus-updater
 
 git pull origin master || {
-	mailx -s "Failed to pull update automation on $machinename" $alertemail
+	echo ""|mailx -s "Failed to pull update automation on $machinename" $alertemail
 	exit 127
 }
 
