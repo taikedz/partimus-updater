@@ -192,7 +192,7 @@ infoe Installing partimus updater ...
 
 apt-get update && apt-get install git anacron -y
 
-cd
+cd /root
 
 if [[ ! -d partimus-updater ]]; then
 	git clone "$giturl" partimus-updater
