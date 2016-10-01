@@ -1,5 +1,7 @@
 #!/bin/bash
 
+giturl=https://github.com/taikedz/partimus-updater
+
 #%include bashout askuser
 
 if [[ "$UID" -gt 0 ]]; then faile You must be root to run this command
@@ -12,7 +14,7 @@ apt-get update && apt-get install git anacron -y
 cd
 
 if [[ ! -d partimus-updater ]]; then
-	git clone https://github.com/taikedz/partimus-updater
+	git clone "$giturl" partimus-updater
 fi
 
 cd partimus-updater
