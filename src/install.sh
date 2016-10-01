@@ -22,10 +22,10 @@ cp bin/cronjob /etc/cron.daily/
 
 cp partimus.conf /etc/
 
-emails=$(askuser "Email(s) to send notifications to")
+emails=$(uask "Email(s) to send notifications to")
 sed "s/EMAIL=/EMAIL=$emails/" -i /etc/partimus.conf
 
-machinename=$(askuser "Name of this machine (for the emails)")
+machinename=$(uask "Name of this machine (for the emails)")
 sed "s/MACHINE=/MACHINE=$machinename/" -i /etc/partimus.conf
 
 infoe Completed successfully.

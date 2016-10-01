@@ -1,5 +1,7 @@
 #!/bin/bash
 
+giturl=https://github.com/taikedz/partimus-updater
+
 #!/bin/bash
 
 #!/bin/bash
@@ -193,7 +195,7 @@ apt-get update && apt-get install git anacron -y
 cd
 
 if [[ ! -d partimus-updater ]]; then
-	git clone https://github.com/taikedz/partimus-updater
+	git clone "$giturl" partimus-updater
 fi
 
 cd partimus-updater
@@ -201,10 +203,10 @@ cp bin/cronjob /etc/cron.daily/
 
 cp partimus.conf /etc/
 
-emails=$(askuser "Email(s) to send notifications to")
+emails=$(uask "Email(s) to send notifications to")
 sed "s/EMAIL=/EMAIL=$emails/" -i /etc/partimus.conf
 
-machinename=$(askuser "Name of this machine (for the emails)")
+machinename=$(uask "Name of this machine (for the emails)")
 sed "s/MACHINE=/MACHINE=$machinename/" -i /etc/partimus.conf
 
 infoe Completed successfully.
