@@ -5,5 +5,5 @@
 if [[ "$UID" -gt 0 ]]; then faile Must be root
 fi
 
-cd "$HOME/partimus-updater"
+cd "/root/partimus-updater"
 bin/pupdater >/dev/null 2>&1

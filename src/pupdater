@@ -19,7 +19,7 @@ thedate=$(date "+%F%T"|sed -r 's/[^0-9]+//g')
 alertemail=$(readconf EMAIL)
 machinename=$(readconf MACHINE)
 updatemode=$(readconf UMODE)
-logfile=$HOME/updater-$thedate.log
+logfile=/root/updater-$thedate.log
 
 cd ~/partimus-updater
 
