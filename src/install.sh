@@ -9,7 +9,7 @@ fi
 
 infoe Installing partimus updater ...
 
-apt-get update && apt-get install git anacron -y
+apt-get update && apt-get install git anacron mail-utils -y
 
 cd /root
 
