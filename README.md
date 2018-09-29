@@ -45,6 +45,6 @@ When the scripts reach the master branch, they will be pulled and run on the cli
 
 You should not need to edit the main scripts often, but if you do:
 
-The scripts in `src` are built using the `bash-builder` tool: https://github.com/taikedz/bash-builder (using the version3 branch)
+The scripts in `src` are built using the `bash-builder` tool: https://github.com/taikedz/bash-builder (latest build with version 1.1.6 of the bash-libs)
 
 They are then copied to `bin/`

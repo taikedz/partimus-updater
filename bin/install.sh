@@ -383,7 +383,7 @@ install_system_dependencies() {
 }
 
 deploy_files() {
-    cp bin/cronjob /etc/cron.daily/
+    cp bin/partimus-updater-cronjob /etc/cron.daily/
     mkdir -p "$(dirname "$PUP_conf")"
     cp partimus.conf "$PUP_conf"
 }
