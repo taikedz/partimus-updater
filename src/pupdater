@@ -1,38 +1,48 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
-#%include bashout
+#%include out.sh
+#%include isroot.sh
+#%include readkv.sh
 
-if [[ "$UID" -gt 0 ]]; then faile You must be root to run this utility
-fi
+#%include configuration.sh
 
-function readconf {
-	label=$1; shift
-	if [[ ! -f /etc/partimus.conf ]]; then
-		echo ""|mailx -s "No configuration file on $machinename !" $alertemail
-	fi
-	echo $(grep -v -e '^#' /etc/partimus.conf |grep -e "^$label=" | sed "s/$label=//" )
+isroot:require "You must be root to run the updater"
+
+check_config_file() {
+    if [[ ! -f "$PUP_conf" ]]; then
+        out:fail "No configuration file !"
+    fi
 }
 
-thedate=$(date "+%F%T"|sed -r 's/[^0-9]+//g')
-alertemail=$(readconf EMAIL)
-machinename=$(readconf MACHINE)
-updatemode=$(readconf UMODE)
-logfile=/root/updater-$thedate.log
-
-cd /root/partimus-updater
-
-git pull origin master || {
-	echo ""|mailx -s "Failed to pull update automation on $machinename" $alertemail
-	exit 127
+run_update_scripts() {
+    for runscript in $(find scripts/ -executable|tail -n +2 | sort ); do
+        echo "$thedate" >> "$PUP_logfile"
+        "$runscript" >> "$PUP_logfile" || {
+            cat "$PUP_logfile"| mailx -s "[$runscript] on $machinename FAILED" $alertemail
+            if [[ "$updatemode" = "blocking" ]]; then
+                exit 2
+            fi
+        }
+    done
 }
 
-for runscript in $(find scripts/ -executable|tail -n +2 | sort ); do
-	"$runscript" >> "$logfile" || {
-		cat "$logfile"| mailx -s "[$runscript] on $machinename FAILED" $alertemail
-		if [[ "$updatemode" = "blocking" ]]; then
-			exit 2
-		fi
-	}
-done
+main() {
+    check_config_file
+
+    thedate="$(date "+%F%T"|sed -r 's/[^0-9]+//g')"
+    alertemail="$(readkv email "$PUP_conf")"
+    machinename="$(readkv machine "$PUP_conf")"
+    updatemode="$(readkv update_mode "$PUP_conf")"
+
+    cd "$PUP_gitdir"
+
+    git pull origin master || {
+        echo ""|mailx -s "Failed to pull update automation on $machinename" $alertemail
+        exit 127
+    }
+
+}
+
+main "$@"

@@ -1,31 +1,51 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 giturl=https://github.com/taikedz/partimus-updater
 
-#%include bashout askuser
+#%include isroot.sh
+#%include out.sh
+#%include askuser.sh
 
-if [[ "$UID" -gt 0 ]]; then faile You must be root to run this command
-fi
+#%include configuration.sh
 
-infoe Installing partimus updater ...
+install_system_dependencies() {
+    apt-get update && apt-get install git anacron mailutils -y
+}
 
-apt-get update && apt-get install git anacron mailutils -y
+deploy_files() {
+    cp bin/cronjob /etc/cron.daily/
+    mkdir -p "$(dirname "$PUP_conf")"
+    cp partimus.conf "$PUP_conf"
+}
 
-cd /root
+configure_install() {
+    emails=$(askuser:ask "Email(s) to send notifications to")
+    sed "s/^email=.*/email=$emails/" -i "$PUP_conf"
 
-if [[ ! -d partimus-updater ]]; then
-	git clone "$giturl" partimus-updater
-fi
+    machinename=$(askuser:ask "Name of this machine (for the emails)")
+    sed -r "s/^machine=.*/machine=$machinename/" -i "$PUP_conf"
+}
 
-cd partimus-updater
-cp bin/cronjob /etc/cron.daily/
+main() {
+    isroot:require "You must be root to install the updater"
 
-cp partimus.conf /etc/
+    cd "$(dirname "$PUP_gitdir")"
 
-emails=$(uask "Email(s) to send notifications to")
-sed "s/EMAIL=/EMAIL=$emails/" -i /etc/partimus.conf
+    out:info "Installing partimus updater ..."
 
-machinename=$(uask "Name of this machine (for the emails)")
-sed "s/MACHINE=/MACHINE=$machinename/" -i /etc/partimus.conf
+    if [[ ! -d "$PUP_gitdir" ]] && [[ ! -L "$PUP_gitdir" ]]; then
+        git clone "$giturl" partimus-updater
+    fi
 
-infoe Completed successfully.
+    cd partimus-updater
+
+    install_system_dependencies
+    deploy_files
+    configure_install
+
+    out:info "Completed successfully."
+}
+
+main "$@"

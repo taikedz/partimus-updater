@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-apt-get update && apt-get upgrade --assume-yes
+apt-get update && apt-get upgrade -y

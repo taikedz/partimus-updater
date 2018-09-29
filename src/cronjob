@@ -1,9 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-#%include bashout
+set -euo pipefail
 
-if [[ "$UID" -gt 0 ]]; then faile Must be root
-fi
+#%include out.sh
+#%include isroot.sh
 
-cd "/root/partimus-updater"
+#%include configuration.sh
+
+isroot:require "You must be root to run the updater job"
+
+cd "$PUP_gitdir"
+
 bin/pupdater >/dev/null 2>&1

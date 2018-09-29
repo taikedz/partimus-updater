@@ -1,0 +1,2 @@
+BBFILES=(src/install.sh src/cronjob src/pupdater)
+BUILDOUTD=bin
