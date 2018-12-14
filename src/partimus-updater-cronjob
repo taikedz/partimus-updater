@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-#%include out.sh
-#%include isroot.sh
+#%include std/out.sh
+#%include std/isroot.sh
 
 #%include configuration.sh
 

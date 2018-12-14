@@ -4,9 +4,9 @@ set -euo pipefail
 
 giturl=https://github.com/taikedz/partimus-updater
 
-#%include isroot.sh
-#%include out.sh
-#%include askuser.sh
+#%include std/isroot.sh
+#%include std/out.sh
+#%include std/askuser.sh
 
 #%include configuration.sh
 

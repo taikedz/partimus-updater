@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-#%include out.sh
-#%include isroot.sh
-#%include readkv.sh
+#%include std/out.sh
+#%include std/isroot.sh
+#%include std/readkv.sh
 
 #%include configuration.sh
 

@@ -1,2 +1,0 @@
-BBFILES=(src/install.sh src/partimus-updater-cronjob src/pupdater)
-BUILDOUTD=bin
